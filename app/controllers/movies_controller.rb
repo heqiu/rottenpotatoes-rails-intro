@@ -13,6 +13,13 @@ class MoviesController < ApplicationController
   def index
     @movies = Movie.all
     @all_ratings =  Movie.new.rating_values
+    
+    if !session[:ratings] 
+      session[:ratings] = params[:ratings]
+    end
+    if !session[:sort_by]
+      session[:sort_by] = params[:sort_by]
+    end
     # note that we cannot simultaneously sort & select a rating
     puts "session"
     puts session[:ratings]
