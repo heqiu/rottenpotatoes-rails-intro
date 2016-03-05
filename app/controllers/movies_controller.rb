@@ -11,33 +11,21 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @all_ratings = Movie.new.rating_values
-    @selected_rating = Hash.new
-    
+    @movies = Movie.all
+    @all_ratings =  Movie.new.rating_values
+    # note that we cannot simultaneously sort & select a rating
     if params[:ratings]
-      params[:ratings].each_key do |rating|
-        if params[:ratings] != nil
-          @selected_rating[rating] = true 
-        else
-          @selected_rating[rating] = false
-        end
-      end
+      @movies = Movie.where(rating: params[:ratings].keys )
     end
     
     if params[:sort_by]
-      puts case params[:sort_by]
+      case params[:sort_by]
         when "title"
-          @movies = Movie.order(params[:sort_by])
+          @movies = @movies.order(params[:sort_by])
           @title_header = 'hilite'
         when "release_date"
-          @movies = Movie.order(params[:sort_by])
+          @movies = @movies.order(params[:sort_by])
           @release_date_header = 'hilite'
-      end
-    else
-      if @selected_rating.values.all?{|rating| rating==false}
-        @movies = Movie.all 
-      else
-        @movies = Movie.where(rating: params[:ratings].keys )
       end
     end
   end
