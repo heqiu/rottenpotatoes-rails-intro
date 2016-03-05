@@ -13,9 +13,6 @@ class MoviesController < ApplicationController
   def index
     @movies = Movie.all
     @all_ratings =  Movie.new.rating_values
-
-    puts "session is currently"
-    puts session[:ratings]
     
     if params[:ratings]
       @movies = Movie.where(rating: params[:ratings].keys )
