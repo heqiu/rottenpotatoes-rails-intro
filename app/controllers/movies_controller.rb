@@ -14,8 +14,14 @@ class MoviesController < ApplicationController
     @movies = Movie.all
     @all_ratings =  Movie.new.rating_values
     # note that we cannot simultaneously sort & select a rating
+    puts "session"
+    puts session[:ratings]
+    
     if params[:ratings]
       @movies = Movie.where(rating: params[:ratings].keys )
+      session[:ratings] = params[:ratings]
+    else
+      @movies = Movie.where(rating: session[:ratings].keys )
     end
     
     if params[:sort_by]
@@ -25,6 +31,16 @@ class MoviesController < ApplicationController
           @title_header = 'hilite'
         when "release_date"
           @movies = @movies.order(params[:sort_by])
+          @release_date_header = 'hilite'
+      end
+      session[:sort_by] = params[:sort_by]  
+    else
+      case session[:sort_by]
+        when "title"
+          @movies = @movies.order(session[:sort_by])
+          @title_header = 'hilite'
+        when "release_date"
+          @movies = @movies.order(session[:sort_by])
           @release_date_header = 'hilite'
       end
     end
